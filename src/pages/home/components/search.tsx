@@ -1,6 +1,28 @@
-export default function Search() {
+import { useCallback, useEffect, useState } from 'react'
+import { useForm } from 'react-hook-form'
+
+interface SearchProps {
+  searchByIssueName: (text: string) => void
+  issues: number | undefined
+}
+
+export function Search({ searchByIssueName, issues }: SearchProps) {
+  const { register, handleSubmit } = useForm()
+  const [search, setSearch] = useState('')
+
+  const handleSearch = useCallback(() => {
+    searchByIssueName(search)
+  }, [search, searchByIssueName])
+
+  useEffect(() => {
+    handleSearch()
+  }, [handleSearch])
+
   return (
-    <div className="mb-12 mt-[72px] w-full space-y-3">
+    <form
+      onSubmit={handleSubmit(handleSearch)}
+      className="mb-12 mt-[72px] w-full space-y-3"
+    >
       <div className="flex items-center justify-between">
         <label
           htmlFor="search"
@@ -8,7 +30,7 @@ export default function Search() {
         >
           Publicações
         </label>
-        <span className="text-sm text-base-span">6 publicações</span>
+        <span className="text-sm text-base-span">{issues} publicações</span>
       </div>
 
       <div className="rounded-md border border-base-border bg-base-input p-4 pb-3 pt-3">
@@ -16,9 +38,16 @@ export default function Search() {
           type="text"
           id="search"
           placeholder="Buscar conteúdo"
+          {...register('search', {
+            onChange: (event) => {
+              setSearch(event.target.value)
+            },
+            value: search,
+          })}
+          autoComplete="off"
           className="w-full flex-1 bg-transparent text-base-text outline-none placeholder:text-base-label"
         />
       </div>
-    </div>
+    </form>
   )
 }
