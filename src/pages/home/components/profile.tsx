@@ -1,3 +1,4 @@
+import { AxiosError } from 'axios'
 import { useEffect, useState } from 'react'
 import {
   FaArrowUpRightFromSquare,
@@ -9,7 +10,7 @@ import { NavLink } from 'react-router-dom'
 
 import { getProfile, GetProfileResponse } from '../../../api/get-profile'
 
-export function Header() {
+export function Profile() {
   const [userData, setUserData] = useState<GetProfileResponse>(
     {} as GetProfileResponse,
   )
@@ -20,8 +21,10 @@ export function Header() {
         const result = await getProfile()
 
         setUserData(result)
-      } catch (erro) {
-        console.error(erro)
+      } catch (error) {
+        if (error instanceof AxiosError && error.status === 404) {
+          alert('Usuário não encontrado.')
+        }
       }
     }
 
