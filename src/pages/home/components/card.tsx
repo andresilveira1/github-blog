@@ -2,6 +2,8 @@ import { formatDistanceToNow } from 'date-fns'
 import { ptBR } from 'date-fns/locale'
 import { NavLink } from 'react-router-dom'
 
+import { Skeleton } from '@/components/ui/skeleton'
+
 interface CardProps {
   data:
     | {
@@ -17,13 +19,13 @@ interface CardProps {
 export function Card({ data }: CardProps) {
   return (
     <>
-      {data &&
-        data.map((issue) => {
+      {data && data.length > 0 ? (
+        data?.map((issue) => {
           return (
             <NavLink
               to={`details/${issue.number}`}
               key={issue.id}
-              className="h-[260px] w-[416px] space-y-5 rounded-lg bg-base-post p-8"
+              className="h-[260px] w-[416px] space-y-5 rounded-lg bg-base-post p-8 hover:bg-base-post/70"
             >
               <div className="flex items-start">
                 <h2 className="w-[283px] text-xl font-bold text-base-title">
@@ -40,7 +42,10 @@ export function Card({ data }: CardProps) {
               <p className="line-clamp-4 text-base-text">{issue.description}</p>
             </NavLink>
           )
-        })}
+        })
+      ) : (
+        <Skeleton className="h-[260px] w-[416px] rounded-lg" />
+      )}
     </>
   )
 }

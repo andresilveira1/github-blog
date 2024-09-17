@@ -1,8 +1,8 @@
 import { AxiosError } from 'axios'
 import { useEffect, useState } from 'react'
+import { LuLoader2 } from 'react-icons/lu'
 import Markdown from 'react-markdown'
 import { useNavigate, useParams } from 'react-router-dom'
-import rehypeRaw from 'rehype-raw'
 import remarkGfm from 'remark-gfm'
 
 import { getIssueDetails } from '../../api/get-issue-details'
@@ -48,9 +48,16 @@ export function Details() {
       <Header data={issueDetails} />
 
       <main className="p-10 pl-8 pr-8 text-base-text">
-        <Markdown remarkPlugins={[remarkGfm]} rehypePlugins={[rehypeRaw]}>
-          {issueDetails.body}
-        </Markdown>
+        {issueDetails.body ? (
+          <Markdown
+            className="prose max-w-full text-base-text prose-h2:text-base-title prose-h3:text-base-title prose-a:text-base-blue prose-strong:text-base-text"
+            remarkPlugins={[remarkGfm]}
+          >
+            {issueDetails.body}
+          </Markdown>
+        ) : (
+          <LuLoader2 className="m-auto h-8 w-8 animate-spin text-muted-foreground" />
+        )}
       </main>
     </div>
   )
